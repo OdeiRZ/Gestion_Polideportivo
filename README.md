@@ -1,19 +1,19 @@
-Gestión Polideportivos 0.95
+GestiÃ³n Polideportivos 0.95
 ================================
 
-Aplicación para la gestión y mantenimiento de polideportivos, clientes, reservas y facturas desarrollada en C.
-Permite gestionar de manera completa e independientes la relación entre éstos a través de ficheros,
-para ello hacemos uso de una interfaz semi-gráfica para dotar al programa de mayor interactividad.
+AplicaciÃ³n para la gestiÃ³n y mantenimiento de polideportivos, clientes, reservas y facturas desarrollada en C.
+Permite gestionar de manera completa e independientes la relaciÃ³n entre Ã©stos a travÃ©s de ficheros,
+para ello hacemos uso de una interfaz semi-grÃ¡fica para dotar al programa de mayor interactividad.
 
-Desde el programa podremos elegir entre diferentes menús y opciones, desde los que podremos gestionar las funciones 
-propias de la aplicación. El sistema permite realizar altas, listados, consultas, modificaciones y bajas, posibilitando 
-así todas las tareas de un mantenimiento completo de datos de manera satisfactoria.
+Desde el programa podremos elegir entre diferentes menÃºs y opciones, desde los que gestionaremos las funciones 
+propias de la aplicaciÃ³n. El sistema permite realizar altas, listados, consultas, modificaciones y bajas, posibilitando 
+asÃ­ todas las tareas de un mantenimiento completo de datos de manera satisfactoria.
 
 ## Requisitos
-- [CONIO] Librería conio.h usada en algunos métodos del programa
+- [CONIO] LibrerÃ­a conio.h usada en algunos mÃ©todos del programa
 
 ## Licencia
-Esta aplicación se ofrece bajo licencia [AGPL versión 3].
+Esta aplicaciÃ³n se ofrece bajo licencia [AGPL versiÃ³n 3].
 
-[AGPL versión 3]: http://www.gnu.org/licenses/agpl.html
+[AGPL versiÃ³n 3]: http://www.gnu.org/licenses/agpl.html
 [CONIO]: https://sourceforge.net/directory/os:windows/?q=conio.+c

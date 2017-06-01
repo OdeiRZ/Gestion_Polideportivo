@@ -2020,8 +2020,7 @@ void factura_bajas(){
 					}
 				}
 			}
-		}
-		else
+		} else
 			sw2=0;
 		if(!sw){
 			printf("Codigo de factura no encontrado");
@@ -2069,8 +2068,8 @@ void factura_ordenacion(){
 	fclose(puntero_a_archivo);
 }
 
-void obtener_fecha(char fechanow[]){
+void obtener_fecha(char fecha[]){
 	time_t tiempo=time(0);
 	struct tm *tlocal=localtime(&tiempo);
-	strftime(fechanow,18,"%d/%m/%y %H:%M:%S",tlocal);
+	strftime(fecha,18,"%d/%m/%y %H:%M:%S",tlocal);
 }

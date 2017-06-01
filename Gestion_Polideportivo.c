@@ -1526,3 +1526,33 @@ void reserva_bajas(){
 	}while(sw2);
 	fclose(puntero_a_archivo);
 }
+
+/////////////-----------------FACTURA-----------------/////////////
+
+void factura_menu(){
+	int seleccion=1;
+
+	while(seleccion!=0){
+		clrscr();
+		printf("Menu Facturas\n");
+		printf("1.- Crear factura\n");
+		printf("2.- Ver todos las facturas\n");
+		printf("3.- Buscar factura\n");
+		printf("4.- Modificar factura\n");
+		printf("5.- Borrar factura\n");
+		printf("0.- Volver\n\n");
+		printf("Opcion: ");
+		scanf("%d",&seleccion);
+		fflush(stdin);
+		switch(seleccion){
+			case 1 : factura_altas();		  									break;
+			case 2 : factura_listados();     									break;
+			case 3 : factura_consultas();     									break;
+			case 4 : factura_modificaciones();									break;
+			case 5 : factura_bajas();     										break;
+			case 0 : 					   					     				break;
+			default: printf("\nElige entre 0 y 5");
+					 getch();
+		}
+	}
+}

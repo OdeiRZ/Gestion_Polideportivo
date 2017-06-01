@@ -602,3 +602,33 @@ void instalacion_ordenacion(){
 	}
 	fclose(puntero_a_archivo);
 }
+
+/////////////-----------------CLIENTE-----------------/////////////
+
+void cliente_menu(){
+	int seleccion=1;
+
+	while(seleccion!=0){
+		clrscr();
+		printf("Menu Clientes\n");
+		printf("1.- Añadir cliente\n");
+		printf("2.- Ver todos los clientes\n");
+		printf("3.- Buscar cliente\n");
+		printf("4.- Modificar cliente\n");
+		printf("5.- Borrar cliente\n");
+		printf("0.- Volver\n\n");
+		printf("Opcion: ");
+		scanf("%d",&seleccion);
+		fflush(stdin);
+		switch(seleccion){
+			case 1 : cliente_altas();		  								break;
+			case 2 : cliente_listados();     								break;
+			case 3 : cliente_consultas();     								break;
+			case 4 : cliente_modificaciones();								break;
+			case 5 : cliente_bajas();     									break;
+			case 0 : 					   					     			break;
+			default: printf("\nElige entre 0 y 5");
+			getch();
+		}
+	}
+}

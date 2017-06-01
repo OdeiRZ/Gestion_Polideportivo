@@ -2068,3 +2068,9 @@ void factura_ordenacion(){
 	}
 	fclose(puntero_a_archivo);
 }
+
+void obtener_fecha(char fechanow[]){
+	time_t tiempo=time(0);
+	struct tm *tlocal=localtime(&tiempo);
+	strftime(fechanow,18,"%d/%m/%y %H:%M:%S",tlocal);
+}

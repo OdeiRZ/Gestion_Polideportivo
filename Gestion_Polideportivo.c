@@ -1052,3 +1052,33 @@ void cliente_ordenacion(){
 	}
 	fclose(puntero_a_archivo);
 }
+
+/////////////-------------RESERVA-------------/////////////
+
+void reserva_menu(){
+	int seleccion=1;
+
+	while(seleccion!=0){
+		clrscr();
+		printf("Menu Reservas\n");
+		printf("1.- Crear reserva\n");
+		printf("2.- Ver todos las reservas\n");
+		printf("3.- Buscar reserva\n");
+		printf("4.- Modificar reserva\n");
+		printf("5.- Borrar reserva\n");
+		printf("0.- Volver\n\n");
+		printf("Opcion: ");
+		scanf("%d",&seleccion);
+		fflush(stdin);
+		switch(seleccion){
+			case 1 : reserva_altas();		  								break;
+			case 2 : reserva_listados();     								break;
+		  	case 3 : reserva_consultas();     								break;
+			case 4 : reserva_modificaciones();								break;
+			case 5 : reserva_bajas();     									break;
+			case 0 : 					   					     			break;
+			default: printf("\nElige entre 0 y 5");
+					 getch();
+		}
+	}
+}

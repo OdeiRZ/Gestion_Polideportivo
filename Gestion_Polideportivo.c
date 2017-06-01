@@ -189,3 +189,33 @@ int main(){
 	}
 	return 0;
 }
+
+/////////////-----------------INSTALACION-----------------/////////////
+
+void instalacion_menu(){
+	int seleccion=1;
+	
+	while(seleccion!=0){
+		clrscr();
+		printf("Centro Polideportivo\n");
+		printf("1.- Añadir Pista\n");
+		printf("2.- Ver todas las pistas\n");
+		printf("3.- Buscar pista\n");
+		printf("4.- Modificar pista\n");
+		printf("5.- Borrar pista\n");
+		printf("0.- Volver\n\n");
+		printf("Opcion: ");
+		scanf("%d",&seleccion);
+		fflush(stdin);
+		switch(seleccion){
+			case 1 : instalacion_altas();										break;
+			case 2 : instalacion_listados();     								break;
+			case 3 : instalacion_consultas();     								break;
+			case 4 : instalacion_modificaciones();								break;
+			case 5 : instalacion_bajas();     									break;
+			case 0 :    					   									break;
+			default: printf("\nElige entre 0 y 5");
+					 getch();
+		}
+	}
+}

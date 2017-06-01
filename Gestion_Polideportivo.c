@@ -632,3 +632,423 @@ void cliente_menu(){
 		}
 	}
 }
+
+void cliente_altas(){
+	long N,desplazamiento;
+	int i;
+
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	do{
+		N++;
+		clrscr();
+		fflush(stdin);
+		printf("\nNumero de registro: ");
+		printf("%ld \n",N);
+		printf("\nDNI/CIF: ");
+		gets(registro_cliente.dni);
+		fflush(stdin);
+		printf("\nNombre: ");
+		gets(registro_cliente.nombre);
+		printf("\nApellidos: ");
+		gets(registro_cliente.apellidos);
+		printf("\nDireccion: ");
+		gets(registro_cliente.direccion);
+		fflush(stdin);
+		printf("\nTelefono: ");
+		gets(registro_cliente.telefono);
+		printf("\nEmail: ");
+		gets(registro_cliente.email);
+		fflush(stdin);
+		printf("\nFederado: ");
+		gets(registro_cliente.federado);
+		fflush(stdin);
+
+		desplazamiento=N*sizeof(registro_cliente);
+		fseek(puntero_a_archivo,desplazamiento,0);
+		fwrite(&registro_cliente, sizeof(registro_cliente),1,puntero_a_archivo);
+		printf("\n¿Introducir mas clientes? (s/n): ");
+	}while(getchar()=='s');
+
+	desplazamiento=0L*sizeof(registro0_clientes);
+	fseek(puntero_a_archivo,desplazamiento,0);
+	registro0_clientes.num_registros=N;
+
+	for(i=0;i<sizeof(tipo_cliente)-4;i++)
+		registro0_clientes.blancos[i]=' ';
+	fwrite(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+	fclose(puntero_a_archivo);
+	cliente_ordenacion();
+}
+
+void cliente_listados(){
+	long N,desplazamiento;
+	int i;
+
+	clrscr();
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	for(i=1;i<=N;i++){
+		desplazamiento=i*sizeof(registro_cliente);
+		fseek(puntero_a_archivo,desplazamiento,0);
+		fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+
+		printf("Numero de registro: %d",i);
+		printf("\nDNI/CIF: %s",registro_cliente.dni);
+		printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+		printf("\nDireccion: %s",registro_cliente.direccion);
+		printf("\nTelefono: %s",registro_cliente.telefono);
+		printf("\nEmail: %s",registro_cliente.email);
+		printf("\nFederado: %s\n\n",registro_cliente.federado);
+		getch();
+	}
+	fclose(puntero_a_archivo);
+	getch();
+}
+
+void cliente_consultas(){
+	long N,desplazamiento,numreg,cen,der,izq;
+	char buscar[10];
+	int busq=1,sw;
+
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes, sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	puntero_a_archivo=fopen(FICHERO2,"rb");
+	while(busq!=0){
+		clrscr();
+		printf("Busqueda de cliente");
+		printf("\n1.- Nº de registro");
+		printf("\n2.- DNI");
+		printf("\n0.- Volver");
+		printf("\nOpcion: ");
+		scanf("%d",&busq);
+		fflush(stdin);
+		switch(busq){
+			case 1 : {
+				clrscr();
+				printf("Nº de registro a buscar: ('Fin'=Salir)");
+				scanf("%ld",&numreg);
+				fflush(stdin);
+				if(numreg<=N && numreg>0){
+					clrscr();
+					desplazamiento=numreg*sizeof(registro_cliente);
+					fseek(puntero_a_archivo,desplazamiento,0);
+					fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+					printf("Numero de registro: %d",numreg);
+					printf("\nDNI/CIF: %s",registro_cliente.dni);
+					printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+					printf("\nDireccion: %s",registro_cliente.direccion);
+					printf("\nTelefono: %s",registro_cliente.telefono);
+					printf("\nEmail: %s",registro_cliente.email);
+					printf("\nFederado[Si/No]: %s\n\n",registro_cliente.federado);
+				} else
+					printf("Nº de registro no encontrado");
+				getch();
+			}	break;
+			case 2 : {
+				do{
+					clrscr();
+					printf("DNI/CIF a buscar: ('Fin'=Salir) ");
+					gets(buscar);
+					fflush(stdin);
+					clrscr();
+
+					if(strncmp(buscar,"Fin",strlen(buscar))!=0){
+						sw=0;
+						izq=1;
+						der=N;
+						do{
+							cen=(izq+der)/2;
+							desplazamiento=cen*sizeof(registro_cliente);
+							fseek(puntero_a_archivo,desplazamiento,0);
+							fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+
+							if(strncmp(buscar,registro_cliente.dni,strlen(buscar))==0 || izq>=der){
+								sw=1;
+								if(strncmp(buscar,registro_cliente.dni,strlen(buscar))==0){
+									printf("Numero de registro: %d",numreg);
+									printf("\nDNI/CIF cliente: %s",registro_cliente.dni);
+									printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+									printf("\nDireccion: %s",registro_cliente.direccion);
+									printf("\nTelefono: %s",registro_cliente.telefono);
+									printf("\nEmail: %s",registro_cliente.email);
+									printf("\nFederado: %s\n\n",registro_cliente.federado);
+								}
+								else
+									printf("DNI/CIF no encontrado");
+								getch();
+							} else {
+								if(strncmp(buscar,registro_cliente.dni,strlen(buscar))<0)
+									der=cen-1;
+								else
+									izq=cen+1;
+								//cen=(izq+der)/2;
+							}
+						}while(!sw);
+					}
+				}while(strncmp(buscar,"Fin",strlen(buscar))!=0);
+			} 	break;
+			case 0 : 	break;
+			default: 	
+				printf("\nElige entre 0 - 2");
+				getch();
+		}
+	}
+	fclose(puntero_a_archivo);
+}
+
+void cliente_modificaciones(){
+	long N,desplazamiento;
+	char nombre[10],eleccion;
+	int seleccion=1,sw,sw2,i;
+
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes, sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	do{
+		sw2=1;clrscr();
+		printf("DNI/CIF cliente a modificar (Salir='Fin'): ");
+		gets(nombre);fflush(stdin);
+		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
+			sw=0;
+			for(i=1;i<=N;i++){
+				desplazamiento=i*sizeof(registro_cliente);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fread(&registro_cliente, sizeof(registro_cliente),1,puntero_a_archivo);
+				if(strncmp(nombre,registro_cliente.dni,strlen(nombre))==0){
+					sw=1;clrscr();
+					printf("Numero de registro: %d",i);
+					printf("\nDNI/CIF cliente: %s",registro_cliente.dni);
+					printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+					printf("\nDireccion: %s",registro_cliente.direccion);
+					printf("\nTelefono: %s",registro_cliente.telefono);
+					printf("\nEmail: %s",registro_cliente.email);
+					printf("\nFederado: %s\n\n",registro_cliente.federado);
+
+					printf("\n\n¿Modificar el registro? (s/n): ");
+					scanf("%c",&eleccion);
+					fflush(stdin);
+					if(eleccion=='s'){
+						do{
+							clrscr();
+							printf("Numero de registro: %d",i);
+							printf("\nDNI/CIF cliente: %s",registro_cliente.dni);
+							printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+							printf("\nDireccion: %s",registro_cliente.direccion);
+							printf("\nTelefono: %s",registro_cliente.telefono);
+							printf("\nEmail: %s",registro_cliente.email);
+							printf("\nFederado: %s\n\n",registro_cliente.federado);
+
+							printf("1.- Modificar nombre\n");
+							printf("2.- Modificar apellidos\n");
+							printf("3.- Modificar direccion\n");
+							printf("4.- Modificar telefono\n");
+							printf("5.- Modificar email\n");
+							printf("6.- Modificar federado\n");
+							printf("0.- Volver\n\n");
+							printf("Opcion: ");
+							scanf("%d",&seleccion);
+							fflush(stdin);
+							switch(seleccion){
+								case 1 : {
+									fflush(stdin);
+									printf("\nInserte nuevo nombre: ");
+									gets(registro_cliente.nombre);
+								}	break;
+								case 2 : {
+									fflush(stdin);
+									printf("\nInserte nuevos apellidos: ");
+									gets(registro_cliente.apellidos);
+								}	break;
+								case 3 : {
+									fflush(stdin);
+									printf("\nInserte nueva direccion: ");
+									gets(registro_cliente.direccion);
+								}	break;
+								case 4 : {
+									fflush(stdin);
+									printf("\nInserte nuevo telefono: ");
+									gets(registro_cliente.telefono);
+								}	break;
+								case 5 : {
+									fflush(stdin);
+									printf("\Inserte nuevo email: ");
+									gets(registro_cliente.email);
+								}	break;
+								case 6 : {
+									fflush(stdin);
+									printf("\nFederado[Si/No]: ");
+									gets(registro_cliente.federado);
+								}	break;
+								case 0 : {
+									desplazamiento=i*sizeof(registro_cliente);
+									fseek(puntero_a_archivo,desplazamiento,0);
+									fwrite(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+									printf("\nRegistro modificado correctamente");
+									getch();
+								}	break;
+								default: 	
+									printf("\nElige entre 0 - 6");
+									getch();
+							}
+						}while(seleccion!=0);
+					}
+				}
+			}
+		} else
+			sw2=0;
+		if(!sw){
+			printf("DNI/CIF cliente no encontrado");
+			getch();
+		}
+	}while(sw2);
+	fclose(puntero_a_archivo);
+}
+
+void cliente_bajas(){
+	long N,N2,desplazamiento;
+	char cod[10],eleccion;
+	int sw,sw2,i,j;
+
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes, sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	do{
+		sw2=1;
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO2,"r+b");
+		printf("DNI/CIF cliente a dar de baja (Salir='Fin'): ");
+		gets(cod);
+		fflush(stdin);
+		if(strncmp(cod,"Fin",strlen(cod))!=0){
+			sw=0;
+			for(i=1;i<=N;i++){
+				desplazamiento=i*sizeof(registro_cliente);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fread(&registro_cliente, sizeof(registro_cliente),1,puntero_a_archivo);
+				if(strncmp(cod,registro_cliente.dni,strlen(cod))==0){
+					sw=1;
+					clrscr();
+					printf("\nDNI/CIF cliente: %s",registro_cliente.dni);
+					printf("\nCliente: %s, %s ",registro_cliente.apellidos,registro_cliente.nombre);
+					printf("\nDireccion: %s",registro_cliente.direccion);
+					printf("\nTelefono: %s",registro_cliente.telefono);
+					printf("\nEmail: %s",registro_cliente.email);
+					printf("\nFederado: %s\n\n",registro_cliente.federado);
+
+					printf("\n\n¿Eliminar el registro? (s/n): ");
+					scanf("%c",&eleccion);
+					fflush(stdin);
+					if(eleccion=='s'){
+						sw=3;
+						puntero_a_archivo2=fopen(FICHERO1,"rb");
+						fseek(puntero_a_archivo2,0L,0);
+						fread(&registro0_reserva,sizeof(registro0_reserva),1,puntero_a_archivo2);
+						N2=registro0_reserva.num_registros;
+
+						for(j=1;j<=N2;j++){                                                         
+							desplazamiento=j*sizeof(registro_reserva);
+							fseek(puntero_a_archivo2,desplazamiento,0);
+							fread(&registro_reserva,sizeof(registro_reserva),1,puntero_a_archivo2);
+
+							if(strcmp(registro_reserva.dni,cod)==0){
+								sw=2;
+								printf("\nNo se puede eliminar un cliente con reserva");
+								printf("\n\n¿Desea eliminar reservas? (s/n) ");
+								scanf("%c",&eleccion);fflush(stdin);
+								if(eleccion=='s')
+									reserva_bajas();
+								break;
+							}
+						}
+						fclose(puntero_a_archivo2);
+                  
+						if(sw==2)
+							break;
+
+						if(sw==3){
+							desplazamiento=N*sizeof(registro_cliente);
+							fseek(puntero_a_archivo,desplazamiento,0);
+							fread(&registro_cliente, sizeof(registro_cliente),1,puntero_a_archivo);
+
+							desplazamiento=i*sizeof(registro_cliente);
+							fseek(puntero_a_archivo,desplazamiento,0);
+							fwrite(&registro_cliente, sizeof(registro_cliente),1,puntero_a_archivo);
+
+							N--;
+
+							fseek(puntero_a_archivo,0L,0);
+							registro0_clientes.num_registros=N;
+							for(i=0;i<sizeof(tipo_cliente)-4;i++)
+								registro0_clientes.blancos[i]=' ';
+							fwrite(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+							fclose(puntero_a_archivo);
+
+							printf("\nRegistro eliminado");
+							cliente_ordenacion();
+							getch();
+							break;
+						}
+					}
+				}
+			}
+		} else
+			sw2=0;
+		if(!sw){
+			printf("DNI/CIF cliente no encontrado");
+			getch();
+		}
+	}while(sw2);
+	fclose(puntero_a_archivo);
+}
+
+void cliente_ordenacion(){
+	tipo_cliente registro2;
+	long N,desplazamiento,i,j;
+	int sw;
+
+	puntero_a_archivo=fopen(FICHERO2,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+	N=registro0_clientes.num_registros;
+
+	for(i=1;i<=N-1;i++){
+		sw=0;
+		for(j=1;j<=N-i;j++){
+			desplazamiento=j*sizeof(registro_cliente);
+			fseek(puntero_a_archivo,desplazamiento,0);
+			fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+
+			desplazamiento=(j+1)*sizeof(registro2);
+			fseek(puntero_a_archivo,desplazamiento,0);
+			fread(&registro2,sizeof(registro2),1,puntero_a_archivo);
+
+			if(strcmp(registro2.dni,registro_cliente.dni)<0){
+				desplazamiento=j*sizeof(registro2);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fwrite(&registro2,sizeof(registro2),1,puntero_a_archivo);
+
+				desplazamiento=(j+1)*sizeof(registro_cliente);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fwrite(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo);
+				sw=1;
+			}
+		}
+		if(sw==0)
+			break;
+	}
+	fclose(puntero_a_archivo);
+}

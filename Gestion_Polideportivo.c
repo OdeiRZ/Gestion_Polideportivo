@@ -1556,3 +1556,515 @@ void factura_menu(){
 		}
 	}
 }
+
+void factura_altas(){
+	long N,N2,desplazamiento;
+	char eleccion;
+	int i,sw;
+
+	do{
+		puntero_a_archivo=fopen(FICHERO4,"r+b");
+		fseek(puntero_a_archivo,0L,0);
+		fread(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+		N=registro0_factura.num_registros;
+                                 
+		N++;
+		clrscr();
+		fflush(stdin);
+		printf("\nNumero de registro: ");
+		printf("%ld \n",N);
+		obtener_fecha(registro_factura.fechanow);
+		printf("%s\n",registro_factura.fechanow);
+		printf("\nCodigo de factura: ");
+		gets(registro_factura.cod_factura);
+		printf("\nCodigo de reserva: ");
+		gets(registro_factura.cod_reserva);      
+
+		sw=0;
+		puntero_a_archivo2=fopen(FICHERO1,"r+b");
+		fseek(puntero_a_archivo2,0L,0);
+		fread(&registro0_reserva,sizeof(registro0_reserva),1,puntero_a_archivo2);
+		N2=registro0_reserva.num_registros;
+
+		for(i=1;i<=N2;i++){
+			desplazamiento=i*sizeof(registro_reserva);
+			fseek(puntero_a_archivo2,desplazamiento,0);
+			fread(&registro_reserva,sizeof(registro_reserva),1,puntero_a_archivo2);
+
+			if(strcmp(registro_factura.cod_reserva,registro_reserva.cod_reserva)==0){
+				sw=1;
+				break;
+			}
+		}
+		if(sw==0){
+			printf("\nReserva no encontrado\n");
+			printf("\n\n¿Desea crear una reserva nueva? (s/n) ");
+			scanf("%c",&eleccion);fflush(stdin);
+			if(eleccion=='s')
+				reserva_altas();
+			break;
+		}
+		fclose(puntero_a_archivo2);
+
+		printf("\nDNI/CIF: ");
+		gets(registro_factura.dni);
+		fflush(stdin);
+
+		sw=0;
+		puntero_a_archivo2=fopen(FICHERO2,"r+b");
+		fseek(puntero_a_archivo2,0L,0);
+		fread(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo2);
+		N2=registro0_clientes.num_registros;
+
+		for(i=1;i<=N2;i++){
+			desplazamiento=i*sizeof(registro_cliente);
+			fseek(puntero_a_archivo2,desplazamiento,0);
+			fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo2);
+
+			if(strcmp(registro_factura.dni,registro_cliente.dni)==0){
+				sw=1;
+				break;
+			}
+		}
+		if(sw==0){
+			printf("\nCliente no encontrado\n");
+			printf("\n\n¿Desea crear un cliente nuevo? (s/n) ");
+			scanf("%c",&eleccion);fflush(stdin);
+			if(eleccion=='s')
+				cliente_altas();
+			break;
+		}
+		fclose(puntero_a_archivo2);
+
+		printf("\nCodigo de pista: ");
+		gets(registro_factura.cod_pista);
+		fflush(stdin);
+
+		sw=0;
+		puntero_a_archivo2=fopen(FICHERO3,"r+b");
+		fseek(puntero_a_archivo2,0L,0);
+		fread(&registro0_instalacion,sizeof(registro0_instalacion),1,puntero_a_archivo2);
+		N2=registro0_instalacion.num_registros;
+
+		for(i=1;i<=N2;i++){
+			desplazamiento=i*sizeof(registro_instalacion);
+			fseek(puntero_a_archivo2,desplazamiento,0);
+			fread(&registro_instalacion,sizeof(registro_instalacion),1,puntero_a_archivo2);
+
+			if(strcmp(registro_factura.cod_pista,registro_instalacion.cod_pista)==0){
+				sw=2;
+				break;
+			}
+		}
+		if(sw==0){
+			printf("\nPista no encontrada\n");
+			printf("\n\n¿Desea crear una Instalacion? (s/n) ");
+			scanf("%c",&eleccion);fflush(stdin);
+			if(eleccion=='s')
+				instalacion_altas();
+			break;
+		}
+		fclose(puntero_a_archivo2);
+
+		printf("\nFecha: ");
+		gets(registro_factura.fecha);
+		printf("\nHora: ");
+		gets(registro_factura.hora);
+		fflush(stdin);
+		printf("\nPrecio: ");
+		scanf("%f",&registro_factura.precio);
+		fflush(stdin);
+
+		desplazamiento=N*sizeof(registro_factura);
+		fseek(puntero_a_archivo,desplazamiento,0);
+		fwrite(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+															
+		desplazamiento=0L*sizeof(registro0_factura);
+		fseek(puntero_a_archivo,desplazamiento,0);
+		registro0_factura.num_registros=N;
+		for(i=0;i<sizeof(tipo_factura)-4;i++)
+			registro0_factura.blancos[i]=' ';
+		fwrite(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+
+		fclose(puntero_a_archivo);
+		factura_ordenacion();
+		printf("\n¿Introducir mas facturas? (s/n): ");
+	}while(getchar()=='s');
+}
+
+void factura_listados(){
+	long N,N2,desplazamiento;
+	int i;
+
+	clrscr();
+	puntero_a_archivo=fopen(FICHERO4,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+	N=registro0_factura.num_registros;
+
+	for(i=1;i<=N;i++){
+		desplazamiento=i*sizeof(registro_factura);
+		fseek(puntero_a_archivo,desplazamiento,0);
+		fread(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+
+		printf("Numero de registro: %d",i);
+		printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+		printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+		printf("\nCreacion factura: %s",registro_factura.fechanow);
+
+		puntero_a_archivo2=fopen(FICHERO2,"r+b");
+		fseek(puntero_a_archivo2,0L,0);
+		fread(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo2);
+		N2=registro0_clientes.num_registros;
+
+		for(i=1;i<=N2;i++){
+			desplazamiento=i*sizeof(registro_cliente);
+			fseek(puntero_a_archivo2,desplazamiento,0);
+			fread(&registro_cliente,sizeof(registro_cliente),1,puntero_a_archivo2);
+
+			if(strcmp(registro_factura.dni,registro_cliente.dni)==0){
+				printf("\nNombre Cliente: %s %s",registro_cliente.nombre,registro_cliente.apellidos);
+				break;
+			}
+		}
+
+		fclose(puntero_a_archivo2);
+		puntero_a_archivo2=fopen(FICHERO3,"r+b");
+		fseek(puntero_a_archivo2,0L,0);
+		fread(&registro0_instalacion,sizeof(registro0_instalacion),1,puntero_a_archivo2);
+		N2=registro0_instalacion.num_registros;
+
+		for(i=1;i<=N2;i++){
+			desplazamiento=i*sizeof(registro_instalacion);
+			fseek(puntero_a_archivo2,desplazamiento,0);
+			fread(&registro_instalacion,sizeof(registro_instalacion),1,puntero_a_archivo2);
+
+			if(strcmp(registro_factura.cod_pista,registro_instalacion.cod_pista)==0){
+				printf("\nNombre de pista: %s ",registro_instalacion.nombre_pista);
+				break;
+			}
+		}
+		fclose(puntero_a_archivo2);
+      
+		printf("\nFecha: %s",registro_factura.fecha);
+		printf("\nHora: %s",registro_factura.hora);
+		printf("\nPrecio: %.2f\n\n",registro_factura.precio);
+		getch();
+	}
+	fclose(puntero_a_archivo);
+	getch();
+}
+
+void factura_consultas(){
+	long N,desplazamiento,numreg,cen,der,izq;
+	char buscar[7];
+	int busq=1,sw;
+
+	puntero_a_archivo=fopen(FICHERO4,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_factura, sizeof(registro0_factura),1,puntero_a_archivo);
+	N=registro0_factura.num_registros;
+
+	puntero_a_archivo=fopen(FICHERO4,"rb");
+	while(busq!=0){
+		clrscr();
+		printf("Busqueda de factura");
+		printf("\n1.- Nº Registro");
+		printf("\n2.- Codigo de factura");
+		printf("\n0.- Volver");
+		printf("\nOpcion: ");
+		scanf("%d",&busq);
+		fflush(stdin);
+		switch(busq){
+			case 1 : {
+				clrscr();
+				printf("Nº de Registro a buscar: ('Fin'=Salir)");
+				scanf("%ld",&numreg);
+				fflush(stdin);
+				if(numreg<=N && numreg>0){
+					clrscr();
+					desplazamiento=numreg*sizeof(registro_factura);
+					fseek(puntero_a_archivo,desplazamiento,0);
+					fread(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+					printf("Numero de registro: %d",numreg);
+					printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+					printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+					printf("\nCreacion factura: %s",registro_factura.fechanow);
+					printf("\nDNI/CIF: %s",registro_factura.dni);
+					printf("\nCodigo de pista: %s ",registro_factura.cod_pista);
+					printf("\nFecha: %s",registro_factura.fecha);
+					printf("\nHora: %s",registro_factura.hora);
+					printf("\nPrecio: %.2f",registro_factura.precio);
+				} else
+					printf("Nº de Registro no encontrado");
+				getch();
+			}	break;
+			case 2 : {
+				do{
+					clrscr();
+					printf("Codigo de factura a buscar: ('Fin'=Salir) ");
+					gets(buscar);
+					fflush(stdin);
+					clrscr();
+
+					if(strncmp(buscar,"Fin",strlen(buscar))!=0){
+						sw=0;
+						izq=1;
+						der=N;
+						do{
+							cen=(izq+der)/2;
+							desplazamiento=cen*sizeof(registro_factura);
+							fseek(puntero_a_archivo,desplazamiento,0);
+							fread(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+
+							if(strncmp(buscar,registro_factura.cod_factura,strlen(buscar))==0 || izq>=der){
+								sw=1;
+								if(strncmp(buscar,registro_factura.cod_factura,strlen(buscar))==0){
+									printf("Numero de registro: %d",numreg);
+									printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+									printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+									printf("\nCreacion factura: %s",registro_factura.fechanow);
+									printf("\nDNI/CIF: %s",registro_factura.dni);
+									printf("\nCodigo de pista: %s ",registro_factura.cod_pista);
+									printf("\nFecha: %s",registro_factura.fecha);
+									printf("\nHora: %s",registro_factura.hora);
+									printf("\nPrecio: %.2f",registro_factura.precio);
+								}
+								else
+									printf("Codigo de factura no encontrado");
+								getch();
+							} else {
+								if(strncmp(buscar,registro_factura.cod_factura,strlen(buscar))<0)
+									der=cen-1;
+								else
+									izq=cen+1;
+								//cen=(izq+der)/2;
+							}
+						}while(!sw);
+					}
+				}while(strncmp(buscar,"Fin",strlen(buscar))!=0);
+			} break;
+			case 0 : 	break;
+			default: 	
+				printf("\nElige entre 0 - 2");
+				getch();
+		}
+	}
+	fclose(puntero_a_archivo);
+}
+
+void factura_modificaciones(){
+	long N,desplazamiento;
+	char nombre[7],eleccion;
+	int seleccion=1,sw,sw2,i;
+
+	puntero_a_archivo=fopen(FICHERO4,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_factura, sizeof(registro0_factura),1,puntero_a_archivo);
+	N=registro0_factura.num_registros;
+
+	do{
+		sw2=1;clrscr();
+		printf("Codigo de factura a modificar (Salir='Fin'): ");
+		gets(nombre);
+		fflush(stdin);
+		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
+			sw=0;
+			for(i=1;i<=N;i++){
+				desplazamiento=i*sizeof(registro_factura);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fread(&registro_factura, sizeof(registro_factura),1,puntero_a_archivo);
+				if(strncmp(nombre,registro_factura.cod_factura,strlen(nombre))==0){
+					sw=1;
+					clrscr();
+					printf("Numero de registro: %d",i);
+					printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+					printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+					printf("\nCreacion factura: %s",registro_factura.fechanow);
+					printf("\nDNI/CIF: %s",registro_factura.dni);
+					printf("\nCodigo de pista: %s ",registro_factura.cod_pista);
+					printf("\nFecha: %s",registro_factura.fecha);
+					printf("\nHora: %s",registro_factura.hora);
+					printf("\nPrecio: %.2f",registro_factura.precio);
+
+					printf("\n\n¿Modificar el Registro? (s/n): ");
+					scanf("%c",&eleccion);
+					fflush(stdin);
+					if(eleccion=='s'){
+						do{
+							clrscr();
+							printf("Numero de registro: %d",i);
+							printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+							printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+							printf("\nCreacion factura: %s",registro_factura.fechanow);
+							printf("\nDNI/CIF: %s",registro_factura.dni);
+							printf("\nCodigo de pista: %s ",registro_factura.cod_pista);
+							printf("\nFecha: %s",registro_factura.fecha);
+							printf("\nHora: %s",registro_factura.hora);
+							printf("\nPrecio: %.2f",registro_factura.precio);
+
+							printf("\n\n1.- Modificar codigo de factura\n");
+							printf("2.- Modificar fecha\n");
+							printf("3.- Modificar hora\n");
+							printf("4.- Modificar precio\n");
+							printf("0.- Volver\n\n");
+							printf("Opcion: ");
+							scanf("%d",&seleccion);
+							fflush(stdin);
+							switch(seleccion){
+								case 1 : {
+									fflush(stdin);
+									printf("\nInserte nuevo codigo de factura: ");
+									gets(registro_factura.cod_factura);
+								}	break;
+								case 2 : {
+									fflush(stdin);
+									printf("\nInserte nueva fecha: ");
+									gets(registro_factura.fecha);
+								}	break;
+								case 3 : {
+									fflush(stdin);
+									printf("\nInserte nueva hora: ");
+									gets(registro_factura.hora);
+								}	break;
+								case 4 : {
+									fflush(stdin);
+									printf("\Inserte nuevo precio: ");
+									scanf("%f",&registro_factura.precio);
+								}	break;
+								case 0 : {
+									desplazamiento=i*sizeof(registro_factura);
+									fseek(puntero_a_archivo,desplazamiento,0);
+									fwrite(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+									printf("\nRegistro modificado correctamente");
+									getch();
+								}	break;
+								default: 	
+									printf("\nElige entre 0 - 4");
+									getch();
+							}
+						}while(seleccion!=0);
+					}
+				}
+			}
+		} else
+			sw2=0;
+		if(!sw){
+			printf("Codigo de factura no encontrado");
+			getch();
+		}
+	}while(sw2);
+	fclose(puntero_a_archivo);
+}
+
+void factura_bajas(){
+	long N,desplazamiento;
+	char cod[7],eleccion;
+	int sw,sw2,i;
+
+	puntero_a_archivo=fopen(FICHERO4,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_factura, sizeof(registro0_factura),1,puntero_a_archivo);
+	N=registro0_factura.num_registros;
+
+	do{
+		sw2=1;
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO4,"r+b"); 
+		printf("Codigo de factura (Salir='Fin'): ");
+		gets(cod);
+		fflush(stdin);
+		if(strncmp(cod,"Fin",strlen(cod))!=0){
+			sw=0;
+			for(i=1;i<=N;i++){
+				desplazamiento=i*sizeof(registro_factura);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fread(&registro_factura, sizeof(registro_factura),1,puntero_a_archivo);
+				if(strncmp(cod,registro_factura.cod_factura,strlen(cod))==0){
+					sw=1;
+					clrscr();
+					printf("Numero de registro: %d",i);
+					printf("\nCodigo de factura: %s",registro_factura.cod_factura);
+					printf("\nCodigo de reserva: %s",registro_factura.cod_reserva);
+					printf("\nCreacion factura: %s",registro_factura.fechanow);
+					printf("\nDNI/CIF: %s",registro_factura.dni);
+					printf("\nCodigo de pista: %s ",registro_factura.cod_pista);
+					printf("\nFecha: %s",registro_factura.fecha);
+					printf("\nHora: %s",registro_factura.hora);
+					printf("\nPrecio: %.2f",registro_factura.precio);
+
+					printf("\n\n¿Dar de Baja el Registro? (s/n): ");
+					scanf("%c",&eleccion);
+					fflush(stdin);
+					if(eleccion=='s'){
+						desplazamiento=N*sizeof(registro_factura);
+						fseek(puntero_a_archivo,desplazamiento,0);
+						fread(&registro_factura, sizeof(registro_factura),1,puntero_a_archivo);
+
+						desplazamiento=i*sizeof(registro_factura);
+						fseek(puntero_a_archivo,desplazamiento,0);
+						fwrite(&registro_factura, sizeof(registro_factura),1,puntero_a_archivo);
+
+						N--;
+						fseek(puntero_a_archivo,0L,0);
+						registro0_factura.num_registros=N;
+						for(i=0;i<sizeof(tipo_factura)-4;i++)
+							registro0_factura.blancos[i]=' ';
+						fwrite(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+						fclose(puntero_a_archivo);
+                  
+						printf("\nRegistro eliminado");
+						factura_ordenacion();
+						getch();
+						break;
+					}
+				}
+			}
+		}
+		else
+			sw2=0;
+		if(!sw){
+			printf("Codigo de factura no encontrado");
+			getch();
+		}
+	}while(sw2);
+	fclose(puntero_a_archivo);
+}
+
+void factura_ordenacion(){
+	tipo_factura registro2;
+	long N,desplazamiento,i,j;
+	int sw;
+
+	puntero_a_archivo=fopen(FICHERO4,"r+b");
+	fseek(puntero_a_archivo,0L,0);
+	fread(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+	N=registro0_factura.num_registros;
+
+	for(i=1;i<=N-1;i++){
+		sw=0;
+		for(j=1;j<=N-i;j++){
+			desplazamiento=j*sizeof(registro_factura);
+			fseek(puntero_a_archivo,desplazamiento,0);
+			fread(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+
+			desplazamiento=(j+1)*sizeof(registro2);
+			fseek(puntero_a_archivo,desplazamiento,0);
+			fread(&registro2,sizeof(registro2),1,puntero_a_archivo);
+
+			if(strcmp(registro2.dni,registro_factura.dni)<0){
+				desplazamiento=j*sizeof(registro2);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fwrite(&registro2,sizeof(registro2),1,puntero_a_archivo);
+
+				desplazamiento=(j+1)*sizeof(registro_factura);
+				fseek(puntero_a_archivo,desplazamiento,0);
+				fwrite(&registro_factura,sizeof(registro_factura),1,puntero_a_archivo);
+				sw=1;
+			}
+		}
+		if(sw==0)
+			break;
+	}
+	fclose(puntero_a_archivo);
+}

@@ -105,3 +105,87 @@ void cliente_bajas();
 void cliente_ordenacion();
 
 FILE *puntero_a_archivo,*puntero_a_archivo2;
+
+int main(){
+	int seleccion=1;
+	int i;
+
+	puntero_a_archivo=fopen(FICHERO4,"rb");
+	if(puntero_a_archivo==NULL){
+		printf("El fichero Facturas.dat esta vacio o no existe");
+		getch();
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO4,"a+b");
+		fseek(puntero_a_archivo,0L,0);
+		registro0_factura.num_registros=0L;
+		for(i=0;i<sizeof(tipo_factura)-4;i++)
+			registro0_factura.blancos[i]=' ';
+		fwrite(&registro0_factura,sizeof(registro0_factura),1,puntero_a_archivo);
+	}
+	fclose(puntero_a_archivo);
+
+	puntero_a_archivo=fopen(FICHERO1,"rb");
+	if(puntero_a_archivo==NULL){
+		printf("El fichero Reservas.dat esta vacio o no existe");
+		getch();
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO1,"a+b");
+		fseek(puntero_a_archivo,0L,0);
+		registro0_reserva.num_registros=0L;
+		for(i=0;i<sizeof(tipo_reserva)-4;i++)
+			registro0_reserva.blancos[i]=' ';
+		fwrite(&registro0_reserva,sizeof(registro0_reserva),1,puntero_a_archivo);
+	}
+	fclose(puntero_a_archivo);
+
+	puntero_a_archivo=fopen(FICHERO2,"rb");
+	if(puntero_a_archivo==NULL){
+		printf("El fichero Clientes.dat esta vacio o no existe");
+		getch();
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO2,"a+b");
+		fseek(puntero_a_archivo,0L,0);
+		registro0_clientes.num_registros=0L;
+		for(i=0;i<sizeof(tipo_cliente)-4;i++)
+			registro0_clientes.blancos[i]=' ';
+		fwrite(&registro0_clientes,sizeof(registro0_clientes),1,puntero_a_archivo);
+	}
+	fclose(puntero_a_archivo);
+
+	puntero_a_archivo=fopen(FICHERO3,"rb");
+	if(puntero_a_archivo==NULL){
+		printf("El fichero Polideportivo esta vacio o no existe");
+		getch();
+		clrscr();
+		puntero_a_archivo=fopen(FICHERO3,"a+b");
+		fseek(puntero_a_archivo,0L,0);
+		registro0_instalacion.num_registros=0L;
+		for(i=0;i<sizeof(tipo_pista)-4;i++)
+			registro0_instalacion.blancos[i]=' ';
+		fwrite(&registro0_instalacion,sizeof(registro0_instalacion),1,puntero_a_archivo);
+	}
+	fclose(puntero_a_archivo);
+
+	while(seleccion!=0){
+		clrscr();
+		printf("Menu Principal\n");
+		printf("1.- Instalaciones deportivas\n");
+		printf("2.- Clientes\n");
+		printf("3.- Reservas\n");
+		printf("4.- Facturas\n");
+		printf("0.- Salir\n\n");
+		printf("Opcion: ");
+		scanf("%d",&seleccion);
+		fflush(stdin);
+		switch(seleccion){
+			case 1 : instalacion_menu();		  								break;
+			case 2 : cliente_menu();     										break;
+			case 3 : reserva_menu();    			 							break;
+			case 4 : factura_menu();											break;
+			case 0 : printf("\nAdios");						 					break;
+			default: printf("\nElige entre 0 y 4");
+					 getch();
+		}
+	}
+	return 0;
+}

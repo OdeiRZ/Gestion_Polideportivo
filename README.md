@@ -1,7 +1,7 @@
 Gestión Polideportivos 0.96
 ================================
 
-Aplicación para la gestión y mantenimiento de polideportivos, clientes, reservas y facturas desarrollada en C.
+Aplicación desarrollada en C para la gestión y mantenimiento de polideportivos, clientes, reservas y facturas.
 Permite gestionar de manera completa e independientes la relación entre éstos a través de ficheros,
 para ello hacemos uso de una interfaz semi-gráfica para dotar al programa de mayor interactividad.
 

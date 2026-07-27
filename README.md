@@ -1,19 +1,34 @@
-Gestión Polideportivos 0.96
-================================
+# Gestión Polideportivo
 
-Aplicación desarrollada en C para la gestión y mantenimiento de polideportivos, clientes, reservas y facturas.
-Permite gestionar de manera completa e independientes la relación entre éstos a través de ficheros,
-para ello hacemos uso de una interfaz semi-gráfica para dotar al programa de mayor interactividad.
+Aplicación de consola en C para gestionar un polideportivo: instalaciones deportivas, clientes, reservas y facturas, con persistencia en ficheros binarios.
 
-Desde el programa podremos elegir entre diferentes menús y opciones, desde los que gestionaremos las funciones 
-propias de la aplicación. El sistema permite realizar altas, listados, consultas, modificaciones y bajas, posibilitando 
-así todas las tareas de un mantenimiento completo de datos de manera satisfactoria.
+## Características
 
-## Requisitos
-- [CONIO] Librería conio.h usada en algunos métodos del programa
+- Menú principal con acceso a cuatro módulos independientes: Instalaciones, Clientes, Reservas y Facturas.
+- Alta, listado, consulta, modificación y baja de registros en cada módulo (CRUD completo).
+- Persistencia en ficheros binarios (`Instalacion.dat`, `Clientes.dat`, `Reservas.dat`, `Facturas.dat`) usando `fread`/`fwrite` con acceso directo por posición (`fseek`).
+- Búsqueda de registros por número o por código mediante búsqueda binaria sobre los ficheros ordenados.
+- Ordenación de registros (burbuja) tras cada alta o baja para mantener los ficheros ordenados por código.
+- Integridad referencial básica entre módulos: no permite borrar una instalación o un cliente si tiene reservas asociadas, y ofrece crear una factura al confirmar una reserva.
+- Cada fichero incluye un registro de cabecera (registro "0") que almacena el número total de registros.
+
+## Tecnologías
+
+- C (estándar, con `conio.h` para entrada/salida de consola en Windows/DOS)
+
+## Instalación / Cómo ejecutarlo
+
+Requiere un compilador de C compatible con `conio.h` (por ejemplo Turbo C, Dev-C++, o MinGW con una librería `conio` compatible en Windows):
+
+```
+gcc Gestion_Polideportivo.c -o Gestion_Polideportivo -lconio
+./Gestion_Polideportivo
+```
+
+Al ejecutarse por primera vez, el programa crea automáticamente los cuatro ficheros de datos si no existen.
+
+Ejercicio académico que practica el manejo de ficheros binarios con registros de longitud fija en C, incluyendo búsqueda binaria y ordenación sobre disco.
 
 ## Licencia
-Esta aplicación se ofrece bajo licencia [GPL versión 3].
 
-[GPL versión 3]: https://www.gnu.org/licenses/gpl-3.0.en.html
-[CONIO]: https://sourceforge.net/directory/os:windows/?q=conio.+c
+GPL versión 3 (ver archivo [LICENSE](LICENSE)).

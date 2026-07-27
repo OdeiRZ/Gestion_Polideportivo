@@ -2,6 +2,13 @@
 #include <conio.h>
 #include <string.h>
 #include <time.h>
+/* Lee una linea de stdin de forma segura (evita el desbordamiento de gets()) y le quita el salto de linea final */
+void leer_linea(char *buf, int size) {
+	if (fgets(buf, size, stdin) != NULL) {
+		buf[strcspn(buf, "\n")] = (char)0;
+	}
+}
+
 #define FICHERO1 "Reservas.dat"
 #define FICHERO2 "Clientes.dat"
 #define FICHERO3 "Instalacion.dat"
@@ -236,14 +243,14 @@ void instalacion_altas(){
 		printf("\nNumero de registro: ");
 		printf("%ld \n",N);
 		printf("\nCodigo de la pista: ");
-		gets(registro_instalacion.cod_pista);
+		leer_linea(registro_instalacion.cod_pista, sizeof(registro_instalacion.cod_pista));
 		fflush(stdin);
 		printf("\nNombre de la pista: ");
-		gets(registro_instalacion.nombre_pista);
+		leer_linea(registro_instalacion.nombre_pista, sizeof(registro_instalacion.nombre_pista));
 		printf("\nDescripcion: ");
-		gets(registro_instalacion.descripcion);
+		leer_linea(registro_instalacion.descripcion, sizeof(registro_instalacion.descripcion));
 		printf("\nEstado: ");
-		gets(registro_instalacion.estado);
+		leer_linea(registro_instalacion.estado, sizeof(registro_instalacion.estado));
 		fflush(stdin);
 
 		desplazamiento=N*sizeof(registro_instalacion);
@@ -333,7 +340,7 @@ void instalacion_consultas(){
 				do{
 					clrscr();
 					printf("Codigo de pista a buscar: ('Fin'=Salir) ");
-					gets(buscar);
+					leer_linea(buscar, sizeof(buscar));
 					fflush(stdin);
 					clrscr();
 
@@ -391,7 +398,7 @@ void instalacion_modificaciones(){
 	do{
 		sw2=1;clrscr();
 		printf("Codigo de pista a modificar (Salir='Fin'): ");
-		gets(nombre);
+		leer_linea(nombre, sizeof(nombre));
 		fflush(stdin);
 		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
 			sw=0;
@@ -431,17 +438,17 @@ void instalacion_modificaciones(){
 								case 1 : {
 									fflush(stdin);
 									printf("\nInserte nuevo nombre de la pista: ");
-									gets(registro_instalacion.nombre_pista);
+									leer_linea(registro_instalacion.nombre_pista, sizeof(registro_instalacion.nombre_pista));
 								}	break;
 								case 2 : {
 									fflush(stdin);
 									printf("\nInserte nueva descripcion: ");
-									gets(registro_instalacion.descripcion);
+									leer_linea(registro_instalacion.descripcion, sizeof(registro_instalacion.descripcion));
 								}	break;
 								case 3 : {
 									fflush(stdin);
 									printf("\nInserte nuevo estado: ");
-									gets(registro_instalacion.estado);
+									leer_linea(registro_instalacion.estado, sizeof(registro_instalacion.estado));
 								}	break;
 								case 0 : {
 									desplazamiento=i*sizeof(registro_instalacion);
@@ -483,7 +490,7 @@ void instalacion_bajas(){
 		clrscr();
 		puntero_a_archivo=fopen(FICHERO3,"r+b");
 		printf("Codigo de pista a eliminar (Salir='Fin'): ");
-		gets(cod);
+		leer_linea(cod, sizeof(cod));
 		fflush(stdin);
 		if(strncmp(cod,"Fin",strlen(cod))!=0){
 			sw=0;
@@ -649,22 +656,22 @@ void cliente_altas(){
 		printf("\nNumero de registro: ");
 		printf("%ld \n",N);
 		printf("\nDNI/CIF: ");
-		gets(registro_cliente.dni);
+		leer_linea(registro_cliente.dni, sizeof(registro_cliente.dni));
 		fflush(stdin);
 		printf("\nNombre: ");
-		gets(registro_cliente.nombre);
+		leer_linea(registro_cliente.nombre, sizeof(registro_cliente.nombre));
 		printf("\nApellidos: ");
-		gets(registro_cliente.apellidos);
+		leer_linea(registro_cliente.apellidos, sizeof(registro_cliente.apellidos));
 		printf("\nDireccion: ");
-		gets(registro_cliente.direccion);
+		leer_linea(registro_cliente.direccion, sizeof(registro_cliente.direccion));
 		fflush(stdin);
 		printf("\nTelefono: ");
-		gets(registro_cliente.telefono);
+		leer_linea(registro_cliente.telefono, sizeof(registro_cliente.telefono));
 		printf("\nEmail: ");
-		gets(registro_cliente.email);
+		leer_linea(registro_cliente.email, sizeof(registro_cliente.email));
 		fflush(stdin);
 		printf("\nFederado: ");
-		gets(registro_cliente.federado);
+		leer_linea(registro_cliente.federado, sizeof(registro_cliente.federado));
 		fflush(stdin);
 
 		desplazamiento=N*sizeof(registro_cliente);
@@ -758,7 +765,7 @@ void cliente_consultas(){
 				do{
 					clrscr();
 					printf("DNI/CIF a buscar: ('Fin'=Salir) ");
-					gets(buscar);
+					leer_linea(buscar, sizeof(buscar));
 					fflush(stdin);
 					clrscr();
 
@@ -819,7 +826,7 @@ void cliente_modificaciones(){
 	do{
 		sw2=1;clrscr();
 		printf("DNI/CIF cliente a modificar (Salir='Fin'): ");
-		gets(nombre);fflush(stdin);
+		leer_linea(nombre, sizeof(nombre));fflush(stdin);
 		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
 			sw=0;
 			for(i=1;i<=N;i++){
@@ -864,32 +871,32 @@ void cliente_modificaciones(){
 								case 1 : {
 									fflush(stdin);
 									printf("\nInserte nuevo nombre: ");
-									gets(registro_cliente.nombre);
+									leer_linea(registro_cliente.nombre, sizeof(registro_cliente.nombre));
 								}	break;
 								case 2 : {
 									fflush(stdin);
 									printf("\nInserte nuevos apellidos: ");
-									gets(registro_cliente.apellidos);
+									leer_linea(registro_cliente.apellidos, sizeof(registro_cliente.apellidos));
 								}	break;
 								case 3 : {
 									fflush(stdin);
 									printf("\nInserte nueva direccion: ");
-									gets(registro_cliente.direccion);
+									leer_linea(registro_cliente.direccion, sizeof(registro_cliente.direccion));
 								}	break;
 								case 4 : {
 									fflush(stdin);
 									printf("\nInserte nuevo telefono: ");
-									gets(registro_cliente.telefono);
+									leer_linea(registro_cliente.telefono, sizeof(registro_cliente.telefono));
 								}	break;
 								case 5 : {
 									fflush(stdin);
 									printf("\Inserte nuevo email: ");
-									gets(registro_cliente.email);
+									leer_linea(registro_cliente.email, sizeof(registro_cliente.email));
 								}	break;
 								case 6 : {
 									fflush(stdin);
 									printf("\nFederado[Si/No]: ");
-									gets(registro_cliente.federado);
+									leer_linea(registro_cliente.federado, sizeof(registro_cliente.federado));
 								}	break;
 								case 0 : {
 									desplazamiento=i*sizeof(registro_cliente);
@@ -931,7 +938,7 @@ void cliente_bajas(){
 		clrscr();
 		puntero_a_archivo=fopen(FICHERO2,"r+b");
 		printf("DNI/CIF cliente a dar de baja (Salir='Fin'): ");
-		gets(cod);
+		leer_linea(cod, sizeof(cod));
 		fflush(stdin);
 		if(strncmp(cod,"Fin",strlen(cod))!=0){
 			sw=0;
@@ -1100,9 +1107,9 @@ void reserva_altas(){
 		printf("\nNumero de registro: ");
 		printf("%ld \n",N);
 		printf("\nCodigo de reserva: ");
-		gets(registro_reserva.cod_reserva);
+		leer_linea(registro_reserva.cod_reserva, sizeof(registro_reserva.cod_reserva));
 		printf("\nDNI/CIF: ");
-		gets(registro_reserva.dni);
+		leer_linea(registro_reserva.dni, sizeof(registro_reserva.dni));
 		fflush(stdin);
 
 		sw=0;
@@ -1132,7 +1139,7 @@ void reserva_altas(){
 		fclose(puntero_a_archivo2);
 
 		printf("\nCodigo de pista: ");
-		gets(registro_reserva.cod_pista);
+		leer_linea(registro_reserva.cod_pista, sizeof(registro_reserva.cod_pista));
 
 		sw=0;
 		puntero_a_archivo2=fopen(FICHERO3,"r+b");
@@ -1161,9 +1168,9 @@ void reserva_altas(){
 		fclose(puntero_a_archivo2);
 
 		printf("\nFecha: ");
-		gets(registro_reserva.fecha);
+		leer_linea(registro_reserva.fecha, sizeof(registro_reserva.fecha));
 		printf("\nHora: ");
-		gets(registro_reserva.hora);
+		leer_linea(registro_reserva.hora, sizeof(registro_reserva.hora));
 		fflush(stdin);
 
 		desplazamiento=N*sizeof(registro_reserva);
@@ -1325,7 +1332,7 @@ void reserva_consultas(){
 				do{
 					clrscr();
 					printf("Codigo de reserva a buscar: ('Fin'=Salir) ");
-					gets(buscar);
+					leer_linea(buscar, sizeof(buscar));
 					fflush(stdin);
 					clrscr();
 
@@ -1386,7 +1393,7 @@ void reserva_modificaciones(){
 	do{
 		sw2=1;clrscr();
 		printf("Codigo de reserva a modificar (Salir='Fin'): ");
-		gets(nombre);
+		leer_linea(nombre, sizeof(nombre));
 		fflush(stdin);
 		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
 			sw=0;
@@ -1426,12 +1433,12 @@ void reserva_modificaciones(){
 								case 1 : {
 									fflush(stdin);
 									printf("\nInserte nueva fecha: ");
-									gets(registro_reserva.fecha);
+									leer_linea(registro_reserva.fecha, sizeof(registro_reserva.fecha));
 								}	break;
 								case 2 : {
 									fflush(stdin);
 									printf("\nInserte nueva hora: ");
-									gets(registro_reserva.hora);
+									leer_linea(registro_reserva.hora, sizeof(registro_reserva.hora));
 								}	break;
 								case 0 : {
 									desplazamiento=i*sizeof(registro_reserva);
@@ -1473,7 +1480,7 @@ void reserva_bajas(){
 		clrscr();
 		puntero_a_archivo=fopen(FICHERO1,"r+b");
 		printf("Codigo de reserva a eliminar (Salir='Fin'): ");
-		gets(cod);
+		leer_linea(cod, sizeof(cod));
 		fflush(stdin);
 		if(strncmp(cod,"Fin",strlen(cod))!=0){
 			sw=0;
@@ -1576,9 +1583,9 @@ void factura_altas(){
 		obtener_fecha(registro_factura.fechanow);
 		printf("%s\n",registro_factura.fechanow);
 		printf("\nCodigo de factura: ");
-		gets(registro_factura.cod_factura);
+		leer_linea(registro_factura.cod_factura, sizeof(registro_factura.cod_factura));
 		printf("\nCodigo de reserva: ");
-		gets(registro_factura.cod_reserva);      
+		leer_linea(registro_factura.cod_reserva, sizeof(registro_factura.cod_reserva));      
 
 		sw=0;
 		puntero_a_archivo2=fopen(FICHERO1,"r+b");
@@ -1607,7 +1614,7 @@ void factura_altas(){
 		fclose(puntero_a_archivo2);
 
 		printf("\nDNI/CIF: ");
-		gets(registro_factura.dni);
+		leer_linea(registro_factura.dni, sizeof(registro_factura.dni));
 		fflush(stdin);
 
 		sw=0;
@@ -1637,7 +1644,7 @@ void factura_altas(){
 		fclose(puntero_a_archivo2);
 
 		printf("\nCodigo de pista: ");
-		gets(registro_factura.cod_pista);
+		leer_linea(registro_factura.cod_pista, sizeof(registro_factura.cod_pista));
 		fflush(stdin);
 
 		sw=0;
@@ -1667,9 +1674,9 @@ void factura_altas(){
 		fclose(puntero_a_archivo2);
 
 		printf("\nFecha: ");
-		gets(registro_factura.fecha);
+		leer_linea(registro_factura.fecha, sizeof(registro_factura.fecha));
 		printf("\nHora: ");
-		gets(registro_factura.hora);
+		leer_linea(registro_factura.hora, sizeof(registro_factura.hora));
 		fflush(stdin);
 		printf("\nPrecio: ");
 		scanf("%f",&registro_factura.precio);
@@ -1803,7 +1810,7 @@ void factura_consultas(){
 				do{
 					clrscr();
 					printf("Codigo de factura a buscar: ('Fin'=Salir) ");
-					gets(buscar);
+					leer_linea(buscar, sizeof(buscar));
 					fflush(stdin);
 					clrscr();
 
@@ -1866,7 +1873,7 @@ void factura_modificaciones(){
 	do{
 		sw2=1;clrscr();
 		printf("Codigo de factura a modificar (Salir='Fin'): ");
-		gets(nombre);
+		leer_linea(nombre, sizeof(nombre));
 		fflush(stdin);
 		if(strncmp(nombre,"Fin",strlen(nombre))!=0){
 			sw=0;
@@ -1915,17 +1922,17 @@ void factura_modificaciones(){
 								case 1 : {
 									fflush(stdin);
 									printf("\nInserte nuevo codigo de factura: ");
-									gets(registro_factura.cod_factura);
+									leer_linea(registro_factura.cod_factura, sizeof(registro_factura.cod_factura));
 								}	break;
 								case 2 : {
 									fflush(stdin);
 									printf("\nInserte nueva fecha: ");
-									gets(registro_factura.fecha);
+									leer_linea(registro_factura.fecha, sizeof(registro_factura.fecha));
 								}	break;
 								case 3 : {
 									fflush(stdin);
 									printf("\nInserte nueva hora: ");
-									gets(registro_factura.hora);
+									leer_linea(registro_factura.hora, sizeof(registro_factura.hora));
 								}	break;
 								case 4 : {
 									fflush(stdin);
@@ -1972,7 +1979,7 @@ void factura_bajas(){
 		clrscr();
 		puntero_a_archivo=fopen(FICHERO4,"r+b"); 
 		printf("Codigo de factura (Salir='Fin'): ");
-		gets(cod);
+		leer_linea(cod, sizeof(cod));
 		fflush(stdin);
 		if(strncmp(cod,"Fin",strlen(cod))!=0){
 			sw=0;

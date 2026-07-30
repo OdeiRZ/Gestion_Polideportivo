@@ -29,6 +29,10 @@ Al ejecutarse por primera vez, el programa crea automáticamente los cuatro fich
 
 Ejercicio académico que practica el manejo de ficheros binarios con registros de longitud fija en C, incluyendo búsqueda binaria y ordenación sobre disco.
 
+## Seguridad
+
+Sustituidas todas las llamadas a `gets()` (sin comprobación de límites, vulnerable a desbordamiento de buffer) por una función `leer_linea()` basada en `fgets()` acotada al tamaño del buffer de destino.
+
 ## Licencia
 
 GPL versión 3 (ver archivo [LICENSE](LICENSE)).
